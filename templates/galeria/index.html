@@ -1,66 +1,72 @@
+{% extends 'galeria/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Sistemas Sintrópicos</title>
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
-</head>
-<body>
-
-    <!-- Menu Lateral -->
-    <div class="sidebar">
-        <h2>SAAS AgroLight</h2>
-        <ul>
-            <li><a href="#dashboard" class="active">Dashboard</a></li>
-            <li><a href="#planos">Planos de Cultivo</a></li>
-            <li><a href="#analises">Análises</a></li>
-            <li><a href="#relatorios">Relatórios</a></li>
-        </ul>
-    </div>
-
-    <!-- Conteúdo Principal -->
-    <div class="main-content">
-        <!-- Cabeçalho -->
-        <header>
-            <h1>Gerenciamento de Sistemas Sintrópicos</h1>
-            <p></p>
-        </header>
-
-        <!-- Seção de Dashboard -->
-        <section id="dashboard">
-            <h2>Dashboard</h2>
-            <p>Visualize dados e estatísticas em tempo real dos sistemas agrossilviculturais.</p>
-            <!-- Aqui você pode adicionar gráficos e indicadores importantes -->
-        </section>
-
-        <!-- Seção de Planos de Cultivo -->
-        <section id="planos">
-            <h2>Planos de Cultivo</h2>
-            <p>Gerencie os planos de cultivo e configure as estratégias para cada sistema.</p>
-            <!-- Campos para adicionar e editar planos de cultivo -->
-        </section>
-
-        <!-- Seção de Análises -->
-        <section id="analises">
-            <h2>Análises</h2>
-            <p>Acesse dados detalhados de produtividade e sustentabilidade de cada sistema.</p>
-            <!-- Dados e análises relevantes -->
-        </section>
-
-        <!-- Seção de Relatórios -->
-        <section id="relatorios">
-            <h2>Relatórios</h2>
-            <p>Gere e visualize relatórios completos sobre os sistemas agrossilviculturais.</p>
-            <!-- Botões para gerar e exportar relatórios -->
-        </section>
-
-        <!-- Rodapé -->
-        <footer>
-            <p>&copy; 2024 SAAS AgroLight - Todos os direitos reservados.</p>
-        </footer>
-    </div>
-
-</body>
-</html>
+{% block content %}
+                <body>
+                    <div class="container">
+                        <!-- Coluna do Formulário -->
+                        <div class="form-section">
+                            <div class="logo">
+                                <img class="banner__imagem" src="{% static '/assets/logo/logo.png' %}" alt="banner Agrolight">
+                            </div>
+                            <form>
+                                <button type="button" class="google-login">Google</button>
+                                <button type="button" class="facebook-login">Facebook</button>
+                                <p>Ou</p>
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="example@gmail.com">
+                                <label for="password">Senha</label>
+                                <input type="password" id="password" placeholder="********">
+                                <div class="options">
+                                    <label><input type="checkbox"> Lembrar-me</label>
+                                    <a href="#">Esqueceu a senha?</a>
+                                </div>
+                                <button type="submit" class="login-btn">Log in</button>
+                                <p>Ainda não tem conta? <a href="#">Criar conta nova</a></p>
+                            </form>
+                        </div>
+                
+                        <!-- Coluna da Imagem -->
+                        <div class="image-section">
+                                <img class="banner__imagem" src="{% static '/assets/images/adult-nature-coffee-harvesting 1.png' %}" alt="banner Agrolight">
+                                <h1 class="banner__titulo"> Plantando o presente, colhendo o futuro</h1>
+                        </div>
+                    </div>
+                </body>      
+{% endblock %}
+                <!--><section class="galeria">
+                    <div class="cards">
+                        <h2 class="cards__titulo">Navegue pela galeria</h2>
+                        <ul class="cards__lista">
+                            {% if cards %}
+                            {% for fotografia in cards %}
+                            <li class="card">
+                                <a href="{% url 'imagem' fotografia.id %}">
+                                    {% if fotografia.foto == '' or fotografia.foto == null %}
+                                        <img class="card__imagem" src="{% static '/assets/imagens/galeria/Image-not-found.png'%}" alt="foto">
+                                    {% else %}
+                                        <img class="card__imagem" src="{{ fotografia.foto.url }}" alt="foto">
+                                    {% endif %}
+                                </a>
+                                <span class="card__tag">Estrelas</span>
+                                <div class="card__info">
+                                    <p class="card__titulo">{{ fotografia.nome }}</p>
+                                    <div class="card__texto">
+                                        <p class="card__descricao">{{ fotografia.legenda }}</p>
+                                        <span>
+                                            <img src="{% static '/assets/ícones/1x/favorite_outline.png' %}" alt="ícone de coração">
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                            {% else %}
+                            <div class="imagem_texto">
+                                <p>Fotografias não encontradas</p>
+                            </div>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div><!-->
