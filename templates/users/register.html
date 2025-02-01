@@ -1,1 +1,37 @@
-<h1>Cadastro</h1>
+{% extends 'galeria/base.html' %}
+{% load static %}
+{% block content %}
+                <body>
+                    <div class="container">
+                        <!-- Coluna do Formulário -->
+                        <div class="form-section">
+                            <div class="logo">
+                                <img class="banner__imagem" src="{% static '/assets/logo/logo.png' %}" alt="banner Agrolight">
+                            </div>
+                            <form action="{% url 'register' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="button" class="google-login">Google</button>
+                                <p>ou</p>
+                                <button type="button" class="facebook-login">Facebook</button>
+                                <div class="row">
+                                    {% for field in form.visible_fields %}
+                                    <div class="col-12 col-lg-12" style="margin-bottom: 10px;">
+                                        <label for="{{ field.id_for_label }}" style="color:#D9D9D9;
+                                        
+                                         margin-bottom: 5px;">{{field.label}}</label>
+                                        {{ field }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="submit" class="login-btn">Cadastre-se</button>
+                            </form>
+                        </div>
+                
+                        <!-- Coluna da Imagem -->
+                        <div class="image-section">
+                                <img class="banner__imagem" src="{% static '/assets/images/adult-nature-coffee-harvesting 1.png' %}" alt="banner Agrolight">
+                                <h1 class="banner__titulo"> Plantando o presente, colhendo o futuro</h1>
+                        </div>
+                    </div>
+                </body>      
+{% endblock %}

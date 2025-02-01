@@ -1,72 +1,7 @@
 {% extends 'galeria/base.html' %}
 {% load static %}
 {% block content %}
-                <body>
-                    <div class="container">
-                        <!-- Coluna do Formulário -->
-                        <div class="form-section">
-                            <div class="logo">
-                                <img class="banner__imagem" src="{% static '/assets/logo/logo.png' %}" alt="banner Agrolight">
-                            </div>
-                            <form>
-                                <button type="button" class="google-login">Google</button>
-                                <button type="button" class="facebook-login">Facebook</button>
-                                <p>Ou</p>
-                                <label for="email">Email</label>
-                                <input type="email" id="email" placeholder="example@gmail.com">
-                                <label for="password">Senha</label>
-                                <input type="password" id="password" placeholder="********">
-                                <div class="options">
-                                    <label><input type="checkbox"> Lembrar-me</label>
-                                    <a href="#">Esqueceu a senha?</a>
-                                </div>
-                                <button type="submit" class="login-btn">Log in</button>
-                                <p>Ainda não tem conta? <a href="#">Criar conta nova</a></p>
-                            </form>
-                        </div>
-                
-                        <!-- Coluna da Imagem -->
-                        <div class="image-section">
-                                <img class="banner__imagem" src="{% static '/assets/images/adult-nature-coffee-harvesting 1.png' %}" alt="banner Agrolight">
-                                <h1 class="banner__titulo"> Plantando o presente, colhendo o futuro</h1>
-                        </div>
-                    </div>
-                </body>      
+    <div class="cards">
+        <h2 class="cards__titulo">Home</h2>
+    </div>  
 {% endblock %}
-                <!--><section class="galeria">
-                    <div class="cards">
-                        <h2 class="cards__titulo">Navegue pela galeria</h2>
-                        <ul class="cards__lista">
-                            {% if cards %}
-                            {% for fotografia in cards %}
-                            <li class="card">
-                                <a href="{% url 'imagem' fotografia.id %}">
-                                    {% if fotografia.foto == '' or fotografia.foto == null %}
-                                        <img class="card__imagem" src="{% static '/assets/imagens/galeria/Image-not-found.png'%}" alt="foto">
-                                    {% else %}
-                                        <img class="card__imagem" src="{{ fotografia.foto.url }}" alt="foto">
-                                    {% endif %}
-                                </a>
-                                <span class="card__tag">Estrelas</span>
-                                <div class="card__info">
-                                    <p class="card__titulo">{{ fotografia.nome }}</p>
-                                    <div class="card__texto">
-                                        <p class="card__descricao">{{ fotografia.legenda }}</p>
-                                        <span>
-                                            <img src="{% static '/assets/ícones/1x/favorite_outline.png' %}" alt="ícone de coração">
-                                        </span>
-                                    </div>
-                                </div>
-                            </li>
-                            {% endfor %}
-                            {% else %}
-                            <div class="imagem_texto">
-                                <p>Fotografias não encontradas</p>
-                            </div>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </section>
-            </section>
-        </main>
-    </div><!-->
