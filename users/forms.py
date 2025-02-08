@@ -11,7 +11,7 @@ class LoginForms(forms.Form):
                 'placeholder': 'Ex.: João Silva',
         }
     ))
-    password=forms.CharField(
+    senha=forms.CharField(
         label='Senha', 
         required=True, 
         max_length=70,
@@ -25,7 +25,7 @@ class LoginForms(forms.Form):
     
 
 class RegisterForms(forms.Form):
-    username_register=forms.CharField(
+    username_cadastro=forms.CharField(
         label='Nome de usuário', 
         required=True, 
         max_length=100,
@@ -46,7 +46,7 @@ class RegisterForms(forms.Form):
             }
         )
     )
-    password_1=forms.CharField(
+    senha_1=forms.CharField(
         label='Senha', 
         required=True, 
         max_length=70,
@@ -57,7 +57,7 @@ class RegisterForms(forms.Form):
             }
         ),
     )
-    password_2=forms.CharField(
+    senha_2=forms.CharField(
         label='Confirme sua senha', 
         required=True, 
         max_length=70,

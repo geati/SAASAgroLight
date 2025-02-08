@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from users.forms import LoginForms, RegisterForms
-from django.contrib.auth.models import User 
-from django.contrib import auth
+from django.contrib.auth.hashers import make_password
+from .models import Usuario
 
 def login(request):
     form = LoginForms()
@@ -10,23 +10,21 @@ def login(request):
         form = LoginForms(request.POST)
         
         if form.is_valid():
-            name = form['username'].value()
-            password = form['password'].value()
+            nome = form['username'].value()
+            senha = form['senha'].value()
             
-        user = auth.authenticate(
-            request,
-            username=name,
-            password=password,
-        )
+            try:
+                user = Usuario.objects.get(nome=nome)
+                
+                if user.check_password(senha):  # Verificar senha usando hash
+                    request.session['user_id'] = user.idusuario  # Criar sessão
+                    return redirect('index')
+                
+            except Usuario.DoesNotExist:
+                pass
         
-        if user is not None:
-            auth.login(request, user)
-            return redirect('index')
+        return redirect('login')
 
-        else:
-            return redirect('login')
-
-    
     return render(request, 'users/login.html', {"form": form})
 
 def register(request):
@@ -36,23 +34,23 @@ def register(request):
         form = RegisterForms(request.POST)
         
         if form.is_valid():
-            if form["password_1"].value() != form["password_2"].value():
+            if form["senha_1"].value() != form["senha_2"].value():
                 return redirect ('register')
             
-            name=form['username_register'].value()
+            nome=form['username_cadastro'].value()
             email=form['email'].value()
-            password=form['password_1'].value()
+            senha=form['senha_1'].value()
             
-            if User.objects.filter(username=name).exists():
-                return redirect ('register')
+            if Usuario.objects.filter(nome=nome).exists():
+                return redirect('register')
             
-            user = User.objects.create_user(
-                username=name,
+            user = Usuario(
+                nome=nome,
                 email=email,
-                password=password
+                senha=make_password(senha)  # Armazena senha com hash
             )
             user.save()
+            
             return redirect('login')
 
-        
     return render(request, 'users/register.html', {"form": form})
