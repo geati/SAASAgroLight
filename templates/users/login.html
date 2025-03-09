@@ -8,7 +8,7 @@
                             <div class="logo">
                                 <img class="banner__imagem" src="{% static '/assets/logo/logo.png' %}" alt="banner Agrolight">
                             </div>
-                            <form action="{% url 'login' %}" method="POST">
+                            <form action="{% url 'login_view' %}" method="POST">
                                 {% csrf_token %}
                                 <button type="button" class="google-login">Google</button>
                                 <p>ou</p>
