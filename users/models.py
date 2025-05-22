@@ -14,3 +14,6 @@ class Usuario(AbstractUser):
 
     class Meta:
         db_table = "auth_user"  # Mapeia para a tabela já existente
+
+    def __str__(self):
+        return self.cpf
