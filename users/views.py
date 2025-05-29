@@ -130,3 +130,4 @@ def redefinir_senha(request, uidb64, token):
         else:
             print("Token inválido ou expirado.")
             return JsonResponse({'error': 'Token inválido ou expirado.'}, status=400)
+        
