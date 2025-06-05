@@ -12,6 +12,8 @@ urlpatterns = [
 
     # Rotas de páginas de usuários (ex: recuperação de senha, login page se tiver template)
     path('', include('users.urls')),
+    
+    path('api/', include('cadastros.urls')),
 
     # Rotas da API (JSON), como autenticação e redefinição de senha via API
     path('api/', include(('users.api_urls', 'users'), namespace='users_api')),
