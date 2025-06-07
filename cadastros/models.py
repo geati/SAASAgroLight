@@ -17,7 +17,7 @@ class Cliente(EnderecoBase):
     idcliente = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True, blank=True, null=True)
-    cpf_cnpj = models.CharField(max_length=14, unique=True, blank=True, null=True),
+    cpf_cnpj = models.CharField(max_length=14, unique=True, blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
@@ -42,7 +42,7 @@ class Fornecedor(EnderecoBase):
 class Propriedade(EnderecoBase):
     idpropriedade = models.AutoField(primary_key=True)
     descricao = models.TextField(blank=True, null=True)
-    tipousuario = models.SmallIntegerField(blank=True, null=True)
+    telefone = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         db_table = 'propriedades'  
