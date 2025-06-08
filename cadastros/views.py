@@ -1,5 +1,4 @@
 from rest_framework import viewsets, permissions
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Cliente, Fornecedor, Propriedade
 from .serializers import ClienteSerializer, FornecedorSerializer, PropriedadeSerializer
 

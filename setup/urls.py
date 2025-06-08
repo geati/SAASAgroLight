@@ -12,6 +12,7 @@ urlpatterns = [
 
     # Rotas de páginas de usuários (ex: recuperação de senha, login page se tiver template)
     path('', include('users.urls')),
+    path('api/', include('users.urls')),
     
     path('api/', include('cadastros.urls')),
 

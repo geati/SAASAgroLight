@@ -5,7 +5,6 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.hashers import make_password
 from .models import Usuario
 from django.http import JsonResponse
-from rest_framework import viewsets
 from .serializers import UsuarioSerializer
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -17,11 +16,38 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth import get_user_model
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 #expõe o acesso aos dados via API
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+    
+    permission_classes = [permissions.AllowAny]
+
+@csrf_exempt
+def api_login(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+    data = json.loads(request.body)
+    username = data.get('username')
+    password = data.get('password')
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        return JsonResponse({'error': 'Credenciais inválidas'}, status=401)
+
+    return JsonResponse({
+        'message': 'Login realizado com sucesso',
+        'user_id': user.id,
+        'username': user.username,
+        'tipousuario': user.tipousuario, 
+    })
 
 def login_view(request):  
     form = LoginForms()
@@ -72,7 +98,17 @@ def register(request):
 
     return render(request, 'users/register.html', {"form": form})
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def usuario_logado(request):
+    user = request.user
+    return Response({
+        "id": user.id,
+        "username": user.username,
+        "tipousuario": user.tipousuario,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+    })
 
 @csrf_exempt
 def solicitar_redefinicao(request):
@@ -89,7 +125,7 @@ def solicitar_redefinicao(request):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         link = f"http://localhost:3000/redefinir-senha/{uid}/{token}/"
 
-        # Envie o e-mail
+        # Enviar o e-mail
         send_mail(
             'Redefinição de senha',
             f'Clique no link para redefinir sua senha: {link}',
@@ -116,7 +152,7 @@ def redefinir_senha(request, uidb64, token):
 
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
-            print("UID decodificado:", uid)  # 👈 AQUI
+            print("UID decodificado:", uid)
             user = get_user_model().objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
             print("Erro ao decodificar UID ou buscar usuário:", e)
