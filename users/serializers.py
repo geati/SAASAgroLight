@@ -6,12 +6,13 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = [
-            'id', 'username', 'email', 'first_name', 'last_name',
-            'cpf', 'logradouro', 'numero', 'complemento', 'bairro',
-            'cep', 'cidade', 'estado', 'tipousuario', 'telefone', 'password'
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'cpf', 'telefone', 'logradouro', 'numero', 'complemento', 'bairro',
+            'cidade', 'estado', 'cep', 'tipousuario', 'password', 'is_active'
         ]
         extra_kwargs = {
-            'password': {'write_only': True}  # para não mostrar senha na resposta
+            'password': {'write_only': True, 'required': False},  # para não mostrar senha na resposta
+            'username' : {'required': False}
         }
         
     def create(self, validated_data):

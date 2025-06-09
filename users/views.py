@@ -1,32 +1,49 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login as auth_login
 from users.forms import LoginForms, RegisterForms
-from django.contrib.auth import login as auth_login
 from django.contrib.auth.hashers import make_password
 from .models import Usuario
-from django.http import JsonResponse
 from .serializers import UsuarioSerializer
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.contrib.auth import get_user_model
-from rest_framework import viewsets, permissions
-from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth import get_user_model, authenticate
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-#expõe o acesso aos dados via API
+
+# ViewSet para CRUD de Usuario via API
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]  # Pode ajustar para IsAuthenticated se quiser proteger
+
+    @action(detail=True, methods=['put'])
+    def inativar(self, request, pk=None):
+        try:
+            usuario = self.get_object()
+            usuario.is_active = False
+            usuario.save()
+            return Response({'status': 'Usuário inativado'})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=True, methods=['put'])
+    def ativar(self, request, pk=None):
+        try:
+            usuario = self.get_object()
+            usuario.is_active = True
+            usuario.save()
+            return Response({'status': 'Usuário ativado'})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @csrf_exempt
 def api_login(request):
@@ -46,10 +63,11 @@ def api_login(request):
         'message': 'Login realizado com sucesso',
         'user_id': user.id,
         'username': user.username,
-        'tipousuario': user.tipousuario, 
+        'tipousuario': user.tipousuario,
     })
 
-def login_view(request):  
+
+def login_view(request):
     form = LoginForms()
 
     if request.method == 'POST':
@@ -63,17 +81,17 @@ def login_view(request):
 
             if user is not None:
                 auth_login(request, user)
-                return redirect('index')
+                return redirect('index')  # Ajuste para a sua url inicial
 
         return redirect('login_view')
 
     return render(request, 'users/login.html', {"form": form})
 
+
 def register(request):
     form = RegisterForms()
-    
+
     if request.method == 'POST':
-        
         form = RegisterForms(request.POST)
 
         if form.is_valid():
@@ -98,6 +116,7 @@ def register(request):
 
     return render(request, 'users/register.html', {"form": form})
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def usuario_logado(request):
@@ -109,6 +128,7 @@ def usuario_logado(request):
         "first_name": user.first_name,
         "last_name": user.last_name,
     })
+
 
 @csrf_exempt
 def solicitar_redefinicao(request):
@@ -135,35 +155,23 @@ def solicitar_redefinicao(request):
         )
 
         return JsonResponse({'message': 'E-mail enviado com instruções.'})
-    
-    
+
+
 @csrf_exempt
 def redefinir_senha(request, uidb64, token):
-    print("\n\n================ CHAMOU O BACKEND DE REDEFINIÇÃO ================\n\n")
-
-    
     if request.method == "POST":
-        print("Requisição recebida para redefinição.")
-        print("uidb64:", uidb64)
-        print("token recebido:", token)        
-        
         data = json.loads(request.body)
         nova_senha = data.get("senha")
 
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
-            print("UID decodificado:", uid)
             user = get_user_model().objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
-            print("Erro ao decodificar UID ou buscar usuário:", e)
+        except (TypeError, ValueError, OverflowError, Usuario.DoesNotExist):
             return JsonResponse({'error': 'Usuário inválido.'}, status=400)
 
         if default_token_generator.check_token(user, token):
-            print("Token válido.")
             user.set_password(nova_senha)
             user.save()
             return JsonResponse({'message': 'Senha redefinida com sucesso!'})
         else:
-            print("Token inválido ou expirado.")
             return JsonResponse({'error': 'Token inválido ou expirado.'}, status=400)
-        
