@@ -1,2 +1,0 @@
-# SAASAgroLight
-Projeto SAASAGroLight
