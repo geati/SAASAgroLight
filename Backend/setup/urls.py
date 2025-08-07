@@ -8,8 +8,6 @@ urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
 
-    # Público
-    path('', include('galeria.urls')),
 
     # Usuários (templates e views HTML)
     path('', include('users.urls')),
